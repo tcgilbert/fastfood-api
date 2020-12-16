@@ -4,9 +4,8 @@ const models = require('../models')
 // read all
 router.get('/', (req, res) => {
   models.FastFood.find()
-  .then((food) => {
-    res.send(food)
-    // res.staus(200).json({ food })
+  .then((data) => {
+    res.status(200).json({ data })
   })
   .catch((err) => res.send(err))
 })
@@ -14,26 +13,35 @@ router.get('/', (req, res) => {
 // read one
 router.get('/:id', (req, res) => {
   models.FastFood.find({_id: req.params.id})
-  .then((food) => {
-    res.send(food)
-    // res.staus(200).json({ food })
+  .then((data) => {
+    res.status(200).json({ data })
   })
   .catch((err) => res.send(err))
 })
 
 // create
 router.post('/', (req, res) => {
-  res.send('fast food create route')
+  let newObj = {
+    name: req.body.name,
+    stores: req.body.stores,
+    menuItems: req.body.menuItems,
+    thomasScore: req.body.thomasScore
+  }
+  models.FastFood.create({newObj})
+  .then((dbRes) => {
+    res.send(`${dbRes} created`)
+  })
+  .catch((err) => res.send(err))
 })
 
-// update
-router.put('/:id', (req, res) => {
-  res.send('fast food update route')
-})
 
 // delete
 router.delete('/:id', (req, res) => {
-  res.send('fast food delete route')
+  models.FastFood.deleteOne({_id: req.params.id})
+  .then((dbRes) => {
+    res.send(`${dbRes} deleted`)
+  })
+  .catch((err) => res.send(err))
 })
 
 module.exports = router;
